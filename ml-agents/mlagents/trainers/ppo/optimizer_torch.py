@@ -35,7 +35,7 @@ class TorchPPOOptimizer(TorchOptimizer):
             print("Connection Cost Added")
         else:
             print("No Connection Cost")
-        self.connection_cost_lambda = 0.0001
+        self.connection_cost_lambda = 0.00001
 
         if policy.shared_critic:
             self._critic = policy.actor
