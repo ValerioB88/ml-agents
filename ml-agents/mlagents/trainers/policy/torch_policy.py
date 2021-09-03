@@ -64,9 +64,9 @@ class TorchPolicy(Policy):
 
         ############
         import pickle
-        pickle.dump(self.behavior_spec, open('./code/experiments/RL_unity_invariance/beha_spec_visual_food.sp', 'wb'))
-        pickle.dump(self.trainer_settings.network_settings, open('./code/experiments/RL_unity_invariance/net_set_visual_food.sp', 'wb'))
-        print("Saved behavior spec and trainer settings")
+        pickle.dump(self.behavior_spec, open('./tmp/beha_spec_visual_food.sp', 'wb'))
+        pickle.dump(self.trainer_settings.network_settings, open('./tmp/net_set_visual_food.sp', 'wb'))
+        print("Saved behavior spec and trainer settings in ./tmp")
         ##############
         if separate_critic:
             self.actor = SimpleActor(
