@@ -1,7 +1,7 @@
 import pytest
 from mlagents.torch_utils import torch
 
-from mlagents.trainers.torch.distributions import (
+from mlagents.trainers.mltorch.distributions import (
     GaussianDistribution,
     MultiCategoricalDistribution,
     GaussianDistInstance,

@@ -1,7 +1,7 @@
 from mlagents.trainers.buffer import BufferKey
 import pytest
 import numpy as np
-from mlagents.trainers.torch.components.reward_providers import (
+from mlagents.trainers.mltorch.components.reward_providers import (
     ExtrinsicRewardProvider,
     create_reward_provider,
 )

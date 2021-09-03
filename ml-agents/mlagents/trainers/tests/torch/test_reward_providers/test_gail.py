@@ -4,7 +4,7 @@ import pytest
 from unittest.mock import patch
 from mlagents.torch_utils import torch
 import os
-from mlagents.trainers.torch.components.reward_providers import (
+from mlagents.trainers.mltorch.components.reward_providers import (
     GAILRewardProvider,
     create_reward_provider,
 )
@@ -13,7 +13,7 @@ from mlagents.trainers.settings import GAILSettings, RewardSignalType
 from mlagents.trainers.tests.torch.test_reward_providers.utils import (
     create_agent_buffer,
 )
-from mlagents.trainers.torch.components.reward_providers.gail_reward_provider import (
+from mlagents.trainers.mltorch.components.reward_providers.gail_reward_provider import (
     DiscriminatorNetwork,
 )
 from mlagents.trainers.tests.dummy_config import create_observation_specs_with_shapes

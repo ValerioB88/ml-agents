@@ -10,12 +10,12 @@ from mlagents_envs.base_env import DecisionSteps, BehaviorSpec
 from mlagents_envs.timers import timed
 
 from mlagents.trainers.settings import TrainerSettings
-from mlagents.trainers.torch.networks import SimpleActor, SharedActorCritic, GlobalSteps
+from mlagents.trainers.mltorch.networks import SimpleActor, SharedActorCritic, GlobalSteps
 
-from mlagents.trainers.torch.utils import ModelUtils
+from mlagents.trainers.mltorch.utils import ModelUtils
 from mlagents.trainers.buffer import AgentBuffer
-from mlagents.trainers.torch.agent_action import AgentAction
-from mlagents.trainers.torch.action_log_probs import ActionLogProbs
+from mlagents.trainers.mltorch.agent_action import AgentAction
+from mlagents.trainers.mltorch.action_log_probs import ActionLogProbs
 
 EPSILON = 1e-7  # Small value to avoid divide by zero
 
@@ -61,6 +61,13 @@ class TorchPolicy(Policy):
             "Losses/Value Loss": "value_loss",
             "Losses/Policy Loss": "policy_loss",
         }
+
+        ############
+        import pickle
+        pickle.dump(self.behavior_spec, open('./code/experiments/RL_unity_invariance/beha_spec_visual_food.sp', 'wb'))
+        pickle.dump(self.trainer_settings.network_settings, open('./code/experiments/RL_unity_invariance/net_set_visual_food.sp', 'wb'))
+        print("Saved behavior spec and trainer settings")
+        ##############
         if separate_critic:
             self.actor = SimpleActor(
                 observation_specs=self.behavior_spec.observation_specs,

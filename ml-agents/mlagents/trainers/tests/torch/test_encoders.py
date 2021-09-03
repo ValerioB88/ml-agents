@@ -2,7 +2,7 @@ from mlagents.torch_utils import torch
 from unittest import mock
 import pytest
 
-from mlagents.trainers.torch.encoders import (
+from mlagents.trainers.mltorch.encoders import (
     VectorInput,
     Normalizer,
     SmallVisualEncoder,

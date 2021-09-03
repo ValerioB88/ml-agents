@@ -5,8 +5,8 @@ from collections import defaultdict
 
 from mlagents.trainers.buffer import AgentBuffer, AgentBufferField
 from mlagents.trainers.trajectory import ObsUtil
-from mlagents.trainers.torch.components.bc.module import BCModule
-from mlagents.trainers.torch.components.reward_providers import create_reward_provider
+from mlagents.trainers.mltorch.components.bc.module import BCModule
+from mlagents.trainers.mltorch.components.reward_providers import create_reward_provider
 
 from mlagents.trainers.policy.torch_policy import TorchPolicy
 from mlagents.trainers.optimizer import Optimizer
@@ -15,7 +15,7 @@ from mlagents.trainers.settings import (
     RewardSignalSettings,
     RewardSignalType,
 )
-from mlagents.trainers.torch.utils import ModelUtils
+from mlagents.trainers.mltorch.utils import ModelUtils
 
 
 class TorchOptimizer(Optimizer):

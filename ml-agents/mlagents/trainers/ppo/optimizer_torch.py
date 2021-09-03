@@ -7,10 +7,10 @@ from mlagents_envs.timers import timed
 from mlagents.trainers.policy.torch_policy import TorchPolicy
 from mlagents.trainers.optimizer.torch_optimizer import TorchOptimizer
 from mlagents.trainers.settings import TrainerSettings, PPOSettings
-from mlagents.trainers.torch.networks import ValueNetwork
-from mlagents.trainers.torch.agent_action import AgentAction
-from mlagents.trainers.torch.action_log_probs import ActionLogProbs
-from mlagents.trainers.torch.utils import ModelUtils
+from mlagents.trainers.mltorch.networks import ValueNetwork
+from mlagents.trainers.mltorch.agent_action import AgentAction
+from mlagents.trainers.mltorch.action_log_probs import ActionLogProbs
+from mlagents.trainers.mltorch.utils import ModelUtils
 from mlagents.trainers.trajectory import ObsUtil
 
 
@@ -28,6 +28,14 @@ class TorchPPOOptimizer(TorchOptimizer):
         super().__init__(policy, trainer_settings)
         reward_signal_configs = trainer_settings.reward_signals
         reward_signal_names = [key.value for key, _ in reward_signal_configs.items()]
+        ## Valerio Addition
+        self.connection_cost = trainer_settings.connection_cost
+        if self.connection_cost == 'linear':
+            self.connection_cost_mat = torch.tensor([[abs(i - idx) for i in range(128)] for idx in range(128)])
+            print("Connection Cost Added")
+        else:
+            print("No Connection Cost")
+        self.connection_cost_lambda = 0.0001
 
         if policy.shared_critic:
             self._critic = policy.actor
@@ -148,9 +156,25 @@ class TorchPPOOptimizer(TorchOptimizer):
             loss_masks,
             decay_eps,
         )
+        connection_loss = 0
+        # The cost depends on the size of the hidden layer, but does not depend on the depth of the network (it's averaged across num of hidden layers)
+        count = 0
+        if self.connection_cost is not None:
+            for n, p in self.policy.actor.network_body._body_endoder.seq_layers.named_parameters():
+                if p.requires_grad and ("bias" not in n):
+                    # print(p)
+                    # pp = p
+                    count += 1
+                    connection_loss += torch.sum(torch.abs(p) * self.connection_cost_mat)
+
+        connection_loss = self.connection_cost_lambda * connection_loss / count
+        # aa = [ww * self.connection_cost_mat for n, ww in self.policy.actor.network_body._body_endoder.seq_layers.named_parameters() if 'bias' not in n]
+
+             # *torch.sum(self.policy.actor.network_body._body_endoder.seq_layers[0].weight * self.connection_cost_mat)
         loss = (
             policy_loss
             + 0.5 * value_loss
+            + connection_loss
             - decay_bet * ModelUtils.masked_mean(entropy, loss_masks)
         )
 

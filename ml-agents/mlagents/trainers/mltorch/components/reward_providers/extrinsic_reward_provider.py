@@ -2,7 +2,7 @@ import numpy as np
 from typing import Dict
 
 from mlagents.trainers.buffer import AgentBuffer, BufferKey
-from mlagents.trainers.torch.components.reward_providers.base_reward_provider import (
+from mlagents.trainers.mltorch.components.reward_providers.base_reward_provider import (
     BaseRewardProvider,
 )
 from mlagents_envs.base_env import BehaviorSpec

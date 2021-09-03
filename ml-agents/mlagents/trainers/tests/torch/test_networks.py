@@ -1,8 +1,8 @@
 import pytest
 
 from mlagents.torch_utils import torch
-from mlagents.trainers.torch.agent_action import AgentAction
-from mlagents.trainers.torch.networks import (
+from mlagents.trainers.mltorch.agent_action import AgentAction
+from mlagents.trainers.mltorch.networks import (
     NetworkBody,
     MultiAgentNetworkBody,
     ValueNetwork,

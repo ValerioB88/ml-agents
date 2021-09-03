@@ -1,13 +1,13 @@
 from typing import List, Tuple, NamedTuple, Optional
 from mlagents.torch_utils import torch, nn
-from mlagents.trainers.torch.distributions import (
+from mlagents.trainers.mltorch.distributions import (
     DistInstance,
     DiscreteDistInstance,
     GaussianDistribution,
     MultiCategoricalDistribution,
 )
-from mlagents.trainers.torch.agent_action import AgentAction
-from mlagents.trainers.torch.action_log_probs import ActionLogProbs
+from mlagents.trainers.mltorch.agent_action import AgentAction
+from mlagents.trainers.mltorch.action_log_probs import ActionLogProbs
 from mlagents_envs.base_env import ActionSpec
 
 EPSILON = 1e-7  # Small value to avoid divide by zero

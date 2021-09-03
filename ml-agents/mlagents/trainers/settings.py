@@ -892,6 +892,9 @@ class RunOptions(ExportableSettings):
         if isinstance(final_runoptions.behaviors, TrainerSettings.DefaultTrainerDict):
             # configure whether or not we should require all behavior names to be found in the config YAML
             final_runoptions.behaviors.set_config_specified(_require_all_behaviors)
+
+        ## VALERIO CHANGES
+        final_runoptions.behaviors['VisualFoodCollector'].connection_cost = args.connection_cost
         return final_runoptions
 
     @staticmethod
