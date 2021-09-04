@@ -13,7 +13,7 @@ from mlagents.trainers.stats import StatsWriter
 from mlagents_envs import logging_util
 from mlagents.plugins import ML_AGENTS_STATS_WRITER
 from mlagents.trainers.settings import RunOptions
-from mlagents.trainers.stats import TensorboardWriter, GaugeWriter, ConsoleWriter
+from mlagents.trainers.stats import TensorboardWriter, GaugeWriter, ConsoleWriter, NeptuneWriter
 
 
 logger = logging_util.get_logger(__name__)
@@ -35,6 +35,7 @@ def get_default_stats_writers(run_options: RunOptions) -> List[StatsWriter]:
         ),
         GaugeWriter(),
         ConsoleWriter(),
+        NeptuneWriter(run_options) if run_options.behaviors['VisualFoodCollector'].neptune else None
     ]
 
 

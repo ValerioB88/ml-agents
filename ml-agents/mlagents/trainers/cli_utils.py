@@ -66,6 +66,8 @@ def _create_parser() -> argparse.ArgumentParser:
     )
     ### VALERIO ADDITION
     argparser.add_argument("-cc", "--connection_cost", default=None)
+    argparser.add_argument("-npt", "--neptune", default=False, action='store_true')
+
     #
     argparser.add_argument(
         "trainer_config_path", action=StoreConfigFile, nargs="?", default=None

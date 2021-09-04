@@ -31,11 +31,12 @@ class TorchPPOOptimizer(TorchOptimizer):
         ## Valerio Addition
         self.connection_cost = trainer_settings.connection_cost
         if self.connection_cost == 'linear':
-            self.connection_cost_mat = torch.tensor([[abs(i - idx) for i in range(128)] for idx in range(128)])
+            self.connection_cost_mat = torch.tensor([[abs(i - idx) for i in range(trainer_settings.network_settings.hidden_units)] for idx in range(trainer_settings.network_settings.hidden_units)])
             print("Connection Cost Added")
         else:
             print("No Connection Cost")
-        self.connection_cost_lambda = 0.00001
+        self.connection_cost_lambda = 0.0000005
+        print(f"Connection cost lambda: {self.connection_cost_lambda}")
 
         if policy.shared_critic:
             self._critic = policy.actor
@@ -167,16 +168,15 @@ class TorchPPOOptimizer(TorchOptimizer):
                     count += 1
                     connection_loss += torch.sum(torch.abs(p) * self.connection_cost_mat)
 
-        connection_loss = self.connection_cost_lambda * connection_loss / count
-        # aa = [ww * self.connection_cost_mat for n, ww in self.policy.actor.network_body._body_endoder.seq_layers.named_parameters() if 'bias' not in n]
-
-             # *torch.sum(self.policy.actor.network_body._body_endoder.seq_layers[0].weight * self.connection_cost_mat)
+            connection_loss = self.connection_cost_lambda * connection_loss / count
         loss = (
             policy_loss
             + 0.5 * value_loss
             + connection_loss
             - decay_bet * ModelUtils.masked_mean(entropy, loss_masks)
         )
+
+        print(f"[LOSS INFO] PolicyL: {policy_loss}, ValueL: {value_loss}, ConnectionL: {connection_loss}")
 
         # Set optimizer learning rate
         ModelUtils.update_learning_rate(self.optimizer, decay_lr)
@@ -189,10 +189,14 @@ class TorchPPOOptimizer(TorchOptimizer):
             # TODO: After PyTorch is default, change to something more correct.
             "Losses/Policy Loss": torch.abs(policy_loss).item(),
             "Losses/Value Loss": value_loss.item(),
+            "Losses/Tot Loss": loss.item(),
             "Policy/Learning Rate": decay_lr,
             "Policy/Epsilon": decay_eps,
             "Policy/Beta": decay_bet,
+
         }
+        if self.connection_cost is not None:
+            update_stats.update({"Losses/Connection Cost Loss": connection_loss.item()})
 
         for reward_provider in self.reward_signals.values():
             update_stats.update(reward_provider.update(batch))

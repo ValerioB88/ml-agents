@@ -895,6 +895,8 @@ class RunOptions(ExportableSettings):
 
         ## VALERIO CHANGES
         final_runoptions.behaviors['VisualFoodCollector'].connection_cost = args.connection_cost
+        final_runoptions.behaviors['VisualFoodCollector'].neptune = args.neptune
+
         return final_runoptions
 
     @staticmethod

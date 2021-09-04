@@ -1,3 +1,4 @@
+import neptune.new as neptune
 from collections import defaultdict
 from enum import Enum
 from typing import List, Dict, NamedTuple, Any, Optional
@@ -154,6 +155,37 @@ class GaugeWriter(StatsWriter):
             )
 
 
+class NeptuneWriter(StatsWriter):
+    def __init__(self, run_options):
+        self.neptune_log = neptune.init(f'valeriobiscione/RL-unity-invariance')
+        # self.neptune_log["sys/tags"].add(list_tags)
+        self.neptune_log["parameters"] = run_options.as_dict()
+
+
+    def write_stats( self, category: str, values: Dict[str, StatsSummary], step: int
+    ) -> None:
+
+        def maybe_log(value):
+            if value in values:
+                self.neptune_log[value].log(values[value].mean, step)
+
+        if "Environment/Cumulative Reward" in values:
+            self.neptune_log['mean reward'].log(values["Environment/Cumulative Reward"].mean, step)
+        if "Losses/Policy Loss" in values:
+            self.neptune_log['policy loss'].log(values["Losses/Policy Loss"].mean, step)
+            self.neptune_log['value loss'].log(values["Losses/Value Loss"].mean, step)
+
+            self.neptune_log['tot loss'].log(values["Losses/Tot Loss"].mean, step)
+        if "Losses/Connection Cost Loss" in values:
+            self.neptune_log['connection loss'].log(values["Losses/Connection Cost Loss"].mean, step)
+
+        maybe_log("Policy/Entropy")
+        maybe_log("Policy/Learning Rate")
+        maybe_log("Policy/Value Estimate")
+
+
+
+
 class ConsoleWriter(StatsWriter):
     def __init__(self):
         self.training_start_time = time.time()
@@ -161,6 +193,7 @@ class ConsoleWriter(StatsWriter):
         self.self_play = False
         self.self_play_team = -1
         self.rank = get_rank()
+
 
     def write_stats(
         self, category: str, values: Dict[str, StatsSummary], step: int

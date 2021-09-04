@@ -729,3 +729,6 @@ class LearningRate(nn.Module):
         # Todo: add learning rate decay
         super().__init__()
         self.learning_rate = torch.Tensor([lr])
+
+##
+
