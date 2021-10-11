@@ -31,7 +31,7 @@ class TorchPPOOptimizer(TorchOptimizer):
         ## Valerio Addition
         self.connection_cost = trainer_settings.connection_cost
         if self.connection_cost == 'linear':
-            self.connection_cost_mat = torch.tensor([[abs(i - idx) for i in range(trainer_settings.network_settings.hidden_units)] for idx in range(trainer_settings.network_settings.hidden_units)])
+            self.connection_cost_mat = torch.tensor([[abs(i - idx) + 1 for i in range(trainer_settings.network_settings.hidden_units)] for idx in range( trainer_settings.network_settings.hidden_units)])
             print("Connection Cost Added")
         else:
             print("No Connection Cost")
@@ -109,6 +109,11 @@ class TorchPPOOptimizer(TorchOptimizer):
 
         n_obs = len(self.policy.behavior_spec.observation_specs)
         current_obs = ObsUtil.from_buffer(batch, n_obs)
+
+        ############### DEBUG
+        import matplotlib.pyplot as plt
+        plt.imshow(current_obs[0][510])
+
         # Convert to tensors
         current_obs = [ModelUtils.list_to_tensor(obs) for obs in current_obs]
 

@@ -156,6 +156,7 @@ namespace Unity.MLAgents.Sensors
             obsCamera.Render();
 
             texture2D.ReadPixels(new Rect(0, 0, texture2D.width, texture2D.height), 0, 0);
+            //texture2D.ReadPixels(new Rect(0, 0, texture2D.width, 10), 0, 0);
 
             obsCamera.targetTexture = prevCameraRt;
             obsCamera.rect = oldRec;

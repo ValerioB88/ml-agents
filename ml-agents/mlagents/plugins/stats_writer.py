@@ -34,8 +34,8 @@ def get_default_stats_writers(run_options: RunOptions) -> List[StatsWriter]:
             hidden_keys=["Is Training", "Step"],
         ),
         GaugeWriter(),
-        ConsoleWriter(),
-        NeptuneWriter(run_options) if run_options.behaviors['VisualFoodCollector'].neptune else None
+        ConsoleWriter()
+       # NeptuneWriter(run_options) if run_options.behaviors['VisualFoodCollector'].neptune else None
     ]
 
 
